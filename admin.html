@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Zeiterfassung</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Admin-Dashboard</h1>
+    <div class="card">
+      <h2>Zeiten für Projekt: LemGOesHANA</h2>
+      <div id="content"></div>
+    </div>
+  </div>
+
+  <script>
+    const apiBase = "/api";
+
+    async function loadData() {
+      const res = await fetch(`${apiBase}/admin/lemgoeshana`);
+      const data = await res.json();
+
+      const content = document.getElementById("content");
+      if (!res.ok || !data.ok) {
+        content.textContent = "Keine Berechtigung oder Fehler beim Laden.";
+        return;
+      }
+
+      if (data.data.length === 0) {
+        content.textContent = "Keine Zeiteinträge vorhanden.";
+        return;
+      }
+
+      let html = "";
+      for (const userData of data.data) {
+        html += `<h3>${userData.username}</h3><ul>`;
+        for (const entry of userData.times) {
+          html += `<li>${entry.project} – ${entry.start} bis ${entry.end || "läuft"} (${entry.duration || ""})</li>`;
+        }
+        html += "</ul><hr/>`;
+      }
+      content.innerHTML = html;
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
