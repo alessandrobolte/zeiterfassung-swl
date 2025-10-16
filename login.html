@@ -26,7 +26,7 @@
   }
 
   *{box-sizing:border-box}
-  html, body {height:100%; margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:center; padding:20px;}
+  html, body {height:100%; margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:center; padding:20px; transition: background 0.3s, color 0.3s;}
   
   .login-panel {
     background: var(--panel);
@@ -35,6 +35,7 @@
     box-shadow: var(--shadow);
     width: 100%;
     max-width: 380px;
+    transition: background 0.3s, box-shadow 0.3s;
   }
 
   h1 {
@@ -59,6 +60,7 @@
     border:1px solid rgba(0,0,0,0.06);
     background: transparent;
     color: var(--text);
+    transition: border-color 0.3s, box-shadow 0.3s;
   }
 
   input[type="text"]:focus, input[type="password"]:focus {
@@ -77,7 +79,7 @@
     font-weight:600;
     cursor:pointer;
     box-shadow: var(--shadow);
-    transition: transform 0.1s ease;
+    transition: transform 0.1s ease, background 0.3s;
   }
 
   button:hover {
@@ -94,9 +96,30 @@
   .footer a { color: var(--accent2); text-decoration:none; }
   .footer a:hover { text-decoration:underline; }
 
+  .theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: 1px solid var(--muted);
+    border-radius: var(--radius);
+    padding: 6px 12px;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  .theme-toggle:hover {
+    background: var(--accent2);
+    color: #fff;
+    border-color: var(--accent2);
+  }
+
 </style>
 </head>
 <body>
+
+  <button class="theme-toggle" id="theme-toggle">🌙</button>
 
   <div class="login-panel">
     <h1>Login</h1>
@@ -113,6 +136,25 @@
       <a href="#">Passwort vergessen?</a>
     </div>
   </div>
+
+<script>
+  // Theme Toggle
+  const toggleBtn = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+
+  // Initial theme from localStorage
+  if(localStorage.getItem('theme') === 'dark'){
+    root.classList.add('dark');
+    toggleBtn.textContent = '☀️';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    root.classList.toggle('dark');
+    const isDark = root.classList.contains('dark');
+    toggleBtn.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+</script>
 
 </body>
 </html>
