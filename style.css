@@ -1,0 +1,119 @@
+/* ---------- Grundlayout ---------- */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* ---------- Header ---------- */
+  header {
+    width: 100%;
+    background-color: #004aad; /* passend zu Stadtwerke-Blau */
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  /* ---------- Login-Form ---------- */
+  .login-container {
+    margin-top: 3rem;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  .login-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #004aad;
+  }
+  
+  .login-container input[type="text"],
+  .login-container input[type="password"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .login-container button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .login-container button:hover {
+    background-color: #003080;
+  }
+  
+  /* ---------- Dashboard / Tables ---------- */
+  table {
+    border-collapse: collapse;
+    width: 90%;
+    max-width: 800px;
+    margin-top: 2rem;
+  }
+  
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+    text-align: left;
+  }
+  
+  table th {
+    background-color: #004aad;
+    color: white;
+  }
+  
+  table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  table tr:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* ---------- Buttons ---------- */
+  .button {
+    padding: 0.5rem 1rem;
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  
+  .button:hover {
+    background-color: #003080;
+  }
+  
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: auto;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
