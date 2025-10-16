@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Zeiterfassung</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Zeiterfassung</h1>
+    <div class="card">
+      <h2>Anmeldung</h2>
+      <input id="username" placeholder="Benutzername" />
+      <input id="password" type="password" placeholder="Passwort" />
+      <button id="loginBtn">Anmelden</button>
+      <p id="message" style="color:red;"></p>
+    </div>
+  </div>
+
+  <script>
+    const apiBase = "/api";
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("message");
+
+      msg.textContent = "";
+
+      if (!username || !password) {
+        msg.textContent = "Bitte Benutzername und Passwort eingeben.";
+        return;
+      }
+
+      const res = await fetch(`${apiBase}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        msg.textContent = "Login fehlgeschlagen.";
+        return;
+      }
+
+      if (data.mustChangePassword) {
+        window.location.href = "changePassword.html";
+      } else if (data.role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>
