@@ -110,7 +110,7 @@ loginBtn.addEventListener('click', async () => {
     }
 
     try {
-        const res = await fetch('https://zeiterfassung-api.alessandrobolte.workers.dev/login', {
+        const res = await fetch('https://zeiterfassung-api.alessandrobolte.workers.dev', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ username, password })
