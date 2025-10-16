@@ -1,73 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeiterfassung SWL - Login</title>
-    <link rel="stylesheet" href="./style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Login — Zeitmanagement</title>
+<style>
+  :root {
+    --bg:#f3f4f6;
+    --panel:#ffffff;
+    --text:#0b1220;
+    --muted:#425066;
+    --accent1:#28a745;
+    --accent2:#3b82f6;
+    --radius:12px;
+    --shadow: 0 8px 24px rgba(15,23,42,0.06);
+  }
+  :root.dark{
+    --bg:#0b0b0c;
+    --panel:#0f1112;
+    --text:#e8e8e8;
+    --muted:#9aa0a6;
+    --accent1:#ff4d4f;
+    --accent2:#ff902b;
+    --shadow: 0 8px 28px rgba(0,0,0,0.6);
+  }
+
+  *{box-sizing:border-box}
+  html, body {height:100%; margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:center; padding:20px;}
+  
+  .login-panel {
+    background: var(--panel);
+    padding: 32px 28px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 380px;
+  }
+
+  h1 {
+    margin-top:0;
+    margin-bottom: 24px;
+    font-size: 1.8rem;
+    text-align:center;
+  }
+
+  label {
+    display:block;
+    font-size:0.9rem;
+    color: var(--muted);
+    margin-bottom:6px;
+  }
+
+  input[type="text"], input[type="password"] {
+    width:100%;
+    padding:10px 12px;
+    margin-bottom:16px;
+    border-radius: var(--radius);
+    border:1px solid rgba(0,0,0,0.06);
+    background: transparent;
+    color: var(--text);
+  }
+
+  input[type="text"]:focus, input[type="password"]:focus {
+    outline:none;
+    border-color: var(--accent2);
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+  }
+
+  button {
+    width:100%;
+    padding:10px 0;
+    border:none;
+    border-radius: var(--radius);
+    background: linear-gradient(90deg,var(--accent1),var(--accent2));
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.1s ease;
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+  }
+
+  .footer {
+    margin-top:16px;
+    text-align:center;
+    font-size:0.85rem;
+    color:var(--muted);
+  }
+
+  .footer a { color: var(--accent2); text-decoration:none; }
+  .footer a:hover { text-decoration:underline; }
+
+</style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <h1>Zeiterfassung SWL</h1>
-    </header>
 
-    <!-- Login-Formular -->
-    <div class="login-container">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Benutzername" class="login-input" />
-        <input type="password" id="password" placeholder="Passwort" class="login-input" />
-        <button id="loginBtn" class="button">Login</button>
-        <p id="loginMessage" style="color:red; margin-top:0.5rem;"></p>
+  <div class="login-panel">
+    <h1>Login</h1>
+    <form id="login-form">
+      <label for="email">E-Mail</label>
+      <input type="text" id="email" name="email" required />
+
+      <label for="password">Passwort</label>
+      <input type="password" id="password" name="password" required />
+
+      <button type="submit">Anmelden</button>
+    </form>
+    <div class="footer">
+      <a href="#">Passwort vergessen?</a>
     </div>
+  </div>
 
-    <!-- Footer -->
-    <footer>
-        &copy; 2025 Stadtwerke
-    </footer>
-
-    <script>
-        const loginBtn = document.getElementById('loginBtn');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const loginMessage = document.getElementById('loginMessage');
-
-        loginBtn.addEventListener('click', async () => {
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value.trim();
-
-            if (!username || !password) {
-                loginMessage.textContent = "Bitte Benutzername und Passwort eingeben.";
-                return;
-            }
-
-            try {
-                const res = await fetch("https://zeiterfassung-api.alessandrobolte.workers.dev/api/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-
-                const data = await res.json();
-
-                if (data.error) {
-                    loginMessage.textContent = data.error;
-                    return;
-                }
-
-                // Weiterleitung je nach Rolle
-                if (data.role === "admin") {
-                    window.location.href = "./admin.html";
-                } else {
-                    window.location.href = "./index.html";
-                }
-            } catch (err) {
-                loginMessage.textContent = "Fehler beim Login. Bitte erneut versuchen.";
-                console.error(err);
-            }
-        });
-    </script>
 </body>
 </html>
