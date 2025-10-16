@@ -2,3 +2,8 @@
   "main": "./functions",
   "compatibility_date": "2024-10-01"
 }
+{
+  "kv_namespaces": [
+    { "binding": "USERS_KV", "id": "45dcc3741298498b9ef09630a436289b9" }
+  ]
+}
