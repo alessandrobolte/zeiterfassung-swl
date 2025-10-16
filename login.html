@@ -3,110 +3,106 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Zeiterfassung</title>
+  <title>Login Zeiterfassung</title>
+  <link rel="stylesheet" href="style.css"> <!-- falls du eine CSS-Datei hast -->
   <style>
-    /* Basis-Styles aus index.html übernommen */
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
     }
-
     .login-container {
-      background: #ffffff;
+      background: white;
       padding: 40px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 320px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       text-align: center;
+      width: 300px;
     }
-
     h1 {
-      margin-bottom: 24px;
-      color: #333333;
+      margin-bottom: 20px;
+      color: #333;
     }
-
     input {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
       border-radius: 6px;
-      font-size: 14px;
+      border: 1px solid #ccc;
     }
-
     button {
       width: 100%;
-      padding: 12px;
-      margin-top: 16px;
-      background-color: #007BFF;
-      border: none;
+      padding: 10px;
+      background-color: #4a90e2;
       color: white;
-      font-size: 16px;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-size: 16px;
     }
-
     button:hover {
-      background-color: #0056b3;
+      background-color: #357ABD;
     }
-
     .error {
       color: red;
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: 14px;
     }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h1>Login</h1>
+    <h1>Zeiterfassung Login</h1>
     <form id="loginForm">
       <input type="text" id="username" placeholder="Benutzername" required>
       <input type="password" id="password" placeholder="Passwort" required>
       <button type="submit">Login</button>
     </form>
-    <div class="error" id="errorMsg"></div>
+    <div id="error" class="error"></div>
   </div>
 
   <script>
-    const form = document.getElementById('loginForm');
-    const errorMsg = document.getElementById('errorMsg');
+    const loginForm = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('error');
 
-    form.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      errorMsg.textContent = '';
+      errorDiv.textContent = '';
 
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch('https://zeiterfassung-api.alessandrobolte.workers.dev', {
+        const response = await fetch('https://zeiterfassung-api.alessandrobolte.workers.dev/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({ username, password })
         });
 
         if (!response.ok) {
-          throw new Error('Login fehlgeschlagen: Benutzername oder Passwort falsch');
+          throw new Error(`HTTP ${response.status}`);
         }
 
         const data = await response.json();
 
-        // Weiterleitung je nach Rolle
-        if(data.role === 'admin'){
-          window.location.href = 'admin.html';
+        if (data.success) {
+          if (data.user.role === 'admin') {
+            window.location.href = 'admin.html';
+          } else {
+            window.location.href = 'index.html';
+          }
         } else {
-          window.location.href = 'index.html';
+          errorDiv.textContent = 'Benutzername oder Passwort falsch';
         }
-
       } catch (err) {
-        errorMsg.textContent = err.message;
+        console.error('Login-Fehler:', err);
+        errorDiv.textContent = 'Fehler beim Login. Bitte erneut versuchen.';
       }
     });
   </script>
