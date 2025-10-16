@@ -1,58 +1,73 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Zeiterfassung</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeiterfassung SWL - Login</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Zeiterfassung</h1>
-    <div class="card">
-      <h2>Anmeldung</h2>
-      <input id="username" placeholder="Benutzername" />
-      <input id="password" type="password" placeholder="Passwort" />
-      <button id="loginBtn">Anmelden</button>
-      <p id="message" style="color:red;"></p>
+    <!-- Header -->
+    <header>
+        <h1>Zeiterfassung SWL</h1>
+    </header>
+
+    <!-- Login-Formular -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Benutzername" class="login-input" />
+        <input type="password" id="password" placeholder="Passwort" class="login-input" />
+        <button id="loginBtn" class="button">Login</button>
+        <p id="loginMessage" style="color:red; margin-top:0.5rem;"></p>
     </div>
-  </div>
 
-  <script>
-    const apiBase = "https://zeiterfassung-api.alessandrobolte.workers.dev/api";
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 Stadtwerke
+    </footer>
 
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const msg = document.getElementById("message");
+    <script>
+        const loginBtn = document.getElementById('loginBtn');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginMessage = document.getElementById('loginMessage');
 
-      msg.textContent = "";
+        loginBtn.addEventListener('click', async () => {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
 
-      if (!username || !password) {
-        msg.textContent = "Bitte Benutzername und Passwort eingeben.";
-        return;
-      }
+            if (!username || !password) {
+                loginMessage.textContent = "Bitte Benutzername und Passwort eingeben.";
+                return;
+            }
 
-      const res = await fetch(`${apiBase}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+            try {
+                const res = await fetch("https://zeiterfassung-api.alessandrobolte.workers.dev/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, password })
+                });
 
-      const data = await res.json();
-      if (!res.ok) {
-        msg.textContent = "Login fehlgeschlagen.";
-        return;
-      }
+                const data = await res.json();
 
-      if (data.mustChangePassword) {
-        window.location.href = "changePassword.html";
-      } else if (data.role === "admin") {
-        window.location.href = "admin.html";
-      } else {
-        window.location.href = "index.html";
-      }
-    });
-  </script>
+                if (data.error) {
+                    loginMessage.textContent = data.error;
+                    return;
+                }
+
+                // Weiterleitung je nach Rolle
+                if (data.role === "admin") {
+                    window.location.href = "./admin.html";
+                } else {
+                    window.location.href = "./index.html";
+                }
+            } catch (err) {
+                loginMessage.textContent = "Fehler beim Login. Bitte erneut versuchen.";
+                console.error(err);
+            }
+        });
+    </script>
 </body>
 </html>
