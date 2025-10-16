@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Login — Zeitmanagement</title>
+<title>Login – Zeitmanagement</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕒</text></svg>">
 <style>
-  :root {
+  :root{
     --bg:#f3f4f6;
     --panel:#ffffff;
     --text:#0b1220;
@@ -25,136 +26,58 @@
     --shadow: 0 8px 28px rgba(0,0,0,0.6);
   }
 
-  *{box-sizing:border-box}
-  html, body {height:100%; margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:center; padding:20px; transition: background 0.3s, color 0.3s;}
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;display:flex;justify-content:center;align-items:center;padding:20px;}
   
-  .login-panel {
-    background: var(--panel);
-    padding: 32px 28px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    width: 100%;
-    max-width: 380px;
-    transition: background 0.3s, box-shadow 0.3s;
-  }
-
-  h1 {
-    margin-top:0;
-    margin-bottom: 24px;
-    font-size: 1.8rem;
-    text-align:center;
-  }
-
-  label {
-    display:block;
-    font-size:0.9rem;
-    color: var(--muted);
-    margin-bottom:6px;
-  }
-
-  input[type="text"], input[type="password"] {
-    width:100%;
-    padding:10px 12px;
-    margin-bottom:16px;
-    border-radius: var(--radius);
-    border:1px solid rgba(0,0,0,0.06);
-    background: transparent;
-    color: var(--text);
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-
-  input[type="text"]:focus, input[type="password"]:focus {
-    outline:none;
-    border-color: var(--accent2);
-    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
-  }
-
-  button {
-    width:100%;
-    padding:10px 0;
-    border:none;
-    border-radius: var(--radius);
-    background: linear-gradient(90deg,var(--accent1),var(--accent2));
-    color:#fff;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow: var(--shadow);
-    transition: transform 0.1s ease, background 0.3s;
-  }
-
-  button:hover {
-    transform: translateY(-1px);
-  }
-
-  .footer {
-    margin-top:16px;
-    text-align:center;
-    font-size:0.85rem;
-    color:var(--muted);
-  }
-
-  .footer a { color: var(--accent2); text-decoration:none; }
-  .footer a:hover { text-decoration:underline; }
-
-  .theme-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: 1px solid var(--muted);
-    border-radius: var(--radius);
-    padding: 6px 12px;
-    cursor: pointer;
-    color: var(--text);
-    transition: background 0.3s, color 0.3s, border-color 0.3s;
-  }
-
-  .theme-toggle:hover {
-    background: var(--accent2);
-    color: #fff;
-    border-color: var(--accent2);
-  }
-
+  .login-panel{background:var(--panel);padding:32px;border-radius:var(--radius);box-shadow:var(--shadow);width:100%;max-width:400px;display:flex;flex-direction:column;gap:16px;}
+  h1{text-align:center;margin:0 0 12px 0;}
+  input{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text);width:100%;}
+  button{padding:10px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;font-weight:600;cursor:pointer;}
+  .error{color:#ff4d4f;font-size:0.9rem;text-align:center;display:none;}
+  .centered{text-align:center;}
 </style>
 </head>
 <body>
-
-  <button class="theme-toggle" id="theme-toggle">🌙</button>
-
   <div class="login-panel">
-    <h1>Login</h1>
-    <form id="login-form">
-      <label for="email">E-Mail</label>
-      <input type="text" id="email" name="email" required />
-
-      <label for="password">Passwort</label>
-      <input type="password" id="password" name="password" required />
-
-      <button type="submit">Anmelden</button>
+    <h1>Zeitmanagement Login</h1>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Benutzername" required />
+      <input type="password" id="password" placeholder="Passwort" required />
+      <button type="submit">Login</button>
     </form>
-    <div class="footer">
-      <a href="#">Passwort vergessen?</a>
-    </div>
+    <div class="error" id="loginError"></div>
   </div>
 
 <script>
-  // Theme Toggle
-  const toggleBtn = document.getElementById('theme-toggle');
-  const root = document.documentElement;
+document.getElementById('loginForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const errorEl = document.getElementById('loginError');
+  errorEl.style.display = 'none';
 
-  // Initial theme from localStorage
-  if(localStorage.getItem('theme') === 'dark'){
-    root.classList.add('dark');
-    toggleBtn.textContent = '☀️';
+  try {
+    const res = await fetch('https://zeiterfassung-api.alessandrobolte.workers.dev/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if(res.ok && data.token){
+      localStorage.setItem('zm:token', data.token);
+      window.location.href = '/index.html';
+    } else {
+      errorEl.textContent = data.message || 'Login fehlgeschlagen. Prüfe Benutzername und Passwort.';
+      errorEl.style.display = 'block';
+    }
+  } catch(err){
+    console.error('Login-Fehler:', err);
+    errorEl.textContent = 'Fehler beim Login. Verbindung zur API prüfen.';
+    errorEl.style.display = 'block';
   }
-
-  toggleBtn.addEventListener('click', () => {
-    root.classList.toggle('dark');
-    const isDark = root.classList.contains('dark');
-    toggleBtn.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  });
+});
 </script>
-
 </body>
 </html>
